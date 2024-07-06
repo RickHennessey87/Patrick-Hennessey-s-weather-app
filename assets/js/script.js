@@ -10,6 +10,7 @@ $(document).ready(() => {
 
     form.on('submit', (event) => {
         event.preventDefault();
+
         const city = cityInput.val().trim();
 
         if (city) {
@@ -25,18 +26,18 @@ $(document).ready(() => {
         fetch(url)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Can't find city Coordinates.")
+                    throw new Error("No response found.")
                 }
                 return response.json();
             })
             .then(data => {
                 if (data.length === 0) {
-                    throw new Error('No response found.');
+                    throw new Error('City not found.');
                 }
                 const { lat, lon } = data[0];
                 
                 getWeather(lat, lon, city);
-                // addCitytoHistory(city);
+                // addCityToHistory(city);
             })
             .catch(error => {
                 console.error(error);
@@ -44,7 +45,7 @@ $(document).ready(() => {
     }
 
     const getWeather = (lat, lon, city) => {
-        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
 
         fetch(url)
             .then(response => {
@@ -55,13 +56,23 @@ $(document).ready(() => {
             })
             .then(data => {
                 console.log(data);
-                // displayWeather();
-                // displayForcast();
+                displayWeather(data, city);
+                // displayForecast();
             })
             .catch(error => {
                 console.error(error);
             });
     }
 
+    const displayWeather = (data, city) => {
+        const weatherData = data.list[0];
+        const weatherContent = `
+            <h3>${city} (${dayjs(weatherData.dt_text).format('DD/MM/YYYY')})</h3>
+            <p>Temp: ${weatherData.main.temp} °F</p>
+            <p>Wind: ${weatherData.wind.speed} MPH</p>
+            <p>Humidity: ${weatherData.main.humidity}%</p>
+           `;
+           
+    }        
 
 });
