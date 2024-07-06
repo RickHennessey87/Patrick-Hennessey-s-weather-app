@@ -1,0 +1,4 @@
+.collection-item:hover {
+    cursor: pointer;
+    color: blueviolet;
+}

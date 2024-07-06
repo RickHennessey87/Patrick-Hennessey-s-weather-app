@@ -6,8 +6,6 @@ $(document).ready(() => {
     const apiKey = '2bb98df7c6bd4e1372efffedf391c44c';
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
-    // renderHistory();
-
     form.on('submit', (event) => {
         event.preventDefault();
 
@@ -37,7 +35,7 @@ $(document).ready(() => {
                 const { lat, lon } = data[0];
                 
                 getWeather(lat, lon, city);
-                // addCityToHistory(city);
+                addCityToHistory(city);
             })
             .catch(error => {
                 console.error(error);
@@ -79,18 +77,41 @@ $(document).ready(() => {
     const displayForecast = (data) => {
         forecast.empty();
         console.log(data.list.length);
-        for (let i = 8; i < data.list.length; i += 8) {
+        for (let i = 0; i < data.list.length; i += 8) {
             const weather = data.list[i];
             const day = $(`
                 <div class=col forecast-day>
-                    <h4>${dayjs(weather.dt_txt).format('MM/DD/YYYY')}</h4>
+                    <h5>${dayjs(weather.dt_txt).format('MM/DD/YYYY')}</h4>
                     <p>Temp: ${weather.main.temp} °F</p>
                     <p>Wind: ${weather.wind.speed} MPH</p>
                     <p>Humidity: ${weather.main.humidity}%</p>
                 </div>
             `);
             forecast.append(day);
+        };
+    }
+
+    const addCityToHistory = (city) => {
+        if (!searchHistory.includes(city)) {
+            searchHistory.push(city);
+
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+
+            renderHistory();
         }
     }
 
+    const renderHistory = () => {
+        history.empty();
+
+        searchHistory.forEach(city => {
+            const item = $('<li class="collection-item">').text(city);
+
+            item.on('click', () => retrieveCoordinates(city));
+
+            history.append(item);
+        })
+    }
+
+    renderHistory();
 });
