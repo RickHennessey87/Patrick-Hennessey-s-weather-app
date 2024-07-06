@@ -31,14 +31,37 @@ $(document).ready(() => {
             })
             .then(data => {
                 if (data.length === 0) {
-                    throw new Error('City not found');
+                    throw new Error('No response found.');
                 }
                 const { lat, lon } = data[0];
                 
-                // getWeather(lat, lon, city);
+                getWeather(lat, lon, city);
+                // addCitytoHistory(city);
             })
             .catch(error => {
                 console.error(error);
             });
     }
+
+    const getWeather = (lat, lon, city) => {
+        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('No response found.')
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                // displayWeather();
+                // displayForcast();
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+
 });
