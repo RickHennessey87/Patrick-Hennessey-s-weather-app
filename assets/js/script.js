@@ -66,7 +66,7 @@ $(document).ready(() => {
     const displayWeather = (data, city) => {
         const weatherData = data.list[0];
         const weatherContent = `
-            <h4>${city} (${dayjs(weatherData.dt_text).format('DD/MM/YYYY')})</h3>
+            <h4>${city} (${dayjs(weatherData.dt_text).format('MM/DD/YYYY')})</h3>
             <p class="mt-4">Temp: ${weatherData.main.temp} °F</p>
             <p class="mt-4">Wind: ${weatherData.wind.speed} MPH</p>
             <p class="mt-4">Humidity: ${weatherData.main.humidity}%</p>
@@ -78,12 +78,12 @@ $(document).ready(() => {
     
     const displayForecast = (data) => {
         forecast.empty();
-
-        for (let i = 0; i < data.list.length; i += 8) {
+        console.log(data.list.length);
+        for (let i = 8; i < data.list.length; i += 8) {
             const weather = data.list[i];
             const day = $(`
                 <div class=col forecast-day>
-                    <h4>${dayjs(weather.dt_txt).format('DD/MM/YYYY')}</h4>
+                    <h4>${dayjs(weather.dt_txt).format('MM/DD/YYYY')}</h4>
                     <p>Temp: ${weather.main.temp} °F</p>
                     <p>Wind: ${weather.wind.speed} MPH</p>
                     <p>Humidity: ${weather.main.humidity}%</p>
