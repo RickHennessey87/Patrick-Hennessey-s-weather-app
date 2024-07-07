@@ -4,6 +4,7 @@ $(document).ready(() => {
     const history = $('#search-history');
     const forecast = $('#forecast-content');
     const apiKey = '2bb98df7c6bd4e1372efffedf391c44c';
+    const messageContainer = $('#message');
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
     form.on('submit', (event) => {
@@ -15,7 +16,9 @@ $(document).ready(() => {
             retrieveCoordinates(city);
 
             cityInput.val('');
-            }
+        } else {
+            showErrorMessage('Please enter a city.')
+        }
     });
 
     const retrieveCoordinates = (city) => {
@@ -38,7 +41,7 @@ $(document).ready(() => {
                 addCityToHistory(city);
             })
             .catch(error => {
-                console.error(error);
+                showErrorMessage(error.message);
             });
     }
 
@@ -57,7 +60,7 @@ $(document).ready(() => {
                 displayForecast(data);
             })
             .catch(error => {
-                console.error(error);
+                showErrorMessage(error.message);
             });
     }
 
@@ -77,6 +80,7 @@ $(document).ready(() => {
     const displayForecast = (data) => {
         forecast.empty();
         console.log(data.list.length);
+        // Since the API captures the weather every 3 hours, I looped through the list in a factor of 8 to capture each day.
         for (let i = 0; i < data.list.length; i += 8) {
             const weather = data.list[i];
             const day = $(`
@@ -111,6 +115,15 @@ $(document).ready(() => {
 
             history.append(item);
         })
+    }
+
+    const showErrorMessage = (message) => {
+        messageContainer.text(message);
+        messageContainer.show();
+
+        setTimeout(() => {
+            messageContainer.hide();
+        }, 5000);
     }
 
     renderHistory();
