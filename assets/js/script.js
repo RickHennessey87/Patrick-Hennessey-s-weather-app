@@ -22,7 +22,7 @@ $(document).ready(() => {
     });
 
     const retrieveCoordinates = (city) => {
-        const url = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apiKey}`;
+        const url = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apiKey}`;
 
         fetch(url)
             .then(response => {
